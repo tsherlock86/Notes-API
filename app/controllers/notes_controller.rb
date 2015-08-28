@@ -5,7 +5,7 @@ class NotesController < ApplicationController
     @notes = Note.all
 
     if User.find_by_api_token(params[:api_token])
-      render :json => @user.notes
+      render :json => @user
     else
       render :json => @notes, each_serializer: NotesSerializer
     end

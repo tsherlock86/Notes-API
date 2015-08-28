@@ -6,12 +6,8 @@ class User < ActiveRecord::Base
   validates :email, presence: true
   validates_uniqueness_of :email
 
-
   def api_token
     self.api_token = SecureRandom.urlsafe_base64
   end
-
-
-
 
 end
