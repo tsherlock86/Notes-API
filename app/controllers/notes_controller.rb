@@ -1,18 +1,27 @@
 class NotesController < ApplicationController
+  before_action :set_note, only: [:update]
 
   def index
     @notes = Note.all
-    render :json => @notes
+
+    if User.find_by_api_token(params[:api_token])
+      render :json => @user.notes
+    else
+      render :json => @notes, each_serializer: NotesSerializer
+    end
   end
 
   def create
     @note = Note.new(note_params)
-    tags = params[:tags].split(",").collect(&:strip)
+
       if @note.save
+        if params[:tags]
+          tags = params[:tags].split(",").collect(&:strip)
           tags.each do |tag|
-            @note.tags << Tag.create(name: tag)
+            @note.tags << Tag.find_or_create_by(name: tag)
           end
-        render :json => @note
+        end
+        render :json => @note, serializer: NotesSerializer, root: "note"
       else
         render :json => @note.errors
       end
@@ -23,7 +32,13 @@ class NotesController < ApplicationController
     render :json => @note
   end
 
-
+  def update
+    if @note.update(note_params)
+      render json: @note, serializer: NotesSerializer, root: "note"
+    else
+      render json: @note.errors
+    end
+  end
 
   private
 

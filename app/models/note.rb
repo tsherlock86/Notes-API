@@ -1,6 +1,8 @@
 class Note < ActiveRecord::Base
-  include ActiveModel::Serialization
   has_many :taggings
   has_many :tags, through: :taggings
+  belongs_to :user
+  validates :title, presence: true
+  validates_uniqueness_of :title
 
 end
