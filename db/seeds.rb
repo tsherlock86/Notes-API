@@ -7,10 +7,12 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 5.times do
-  Note.create({
-              :title => Faker::Lorem.sentence,
-              :body => Faker::Lorem.sentences(3),
-              :tags => "#{Faker::Lorem.word}, #{Faker::Lorem.word}, #{Faker::Lorem.word}"
-              }
-              )
+  note = Note.create({title: Faker::Lorem.sentence, body: Faker::Lorem.paragraph, user_id: 1})
+
+  3.times do
+    tag = Tag.create({name: Faker::Lorem.word})
+    note.tags << tag
+  end
+
+
 end
